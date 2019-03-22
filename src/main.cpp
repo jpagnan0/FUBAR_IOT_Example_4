@@ -6,11 +6,11 @@ Control an RGB led from NodeRed MQTT
 
 */
 #include <Arduino.h>
-#include <MQTThandler.h>
+#include <MQTThandler.h>		// My wrapper around PubSubClient
 #include <ESP8266WiFi.h>
-#include <DNSServer.h>
-#include <ESP8266WebServer.h>
-#include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
+#include <DNSServer.h>			// needed for captive portal ?
+#include <ESP8266WebServer.h>  	// needed for captive portal ?
+#include <WiFiManager.h>        //Captive portal https://github.com/tzapu/WiFiManager
 #include <fastled.h>
 
 #define NUM_LEDS 1 // one LED in kit
@@ -109,9 +109,9 @@ void setup() {
 	SetLed();
 
 	GotMail = false;
-	MTQ.setClientName("ESP8266Client");
-	MTQ.subscribeIncomming("LEDset");
-	MTQ.subscribeOutgoing("msgOut");
+	MTQ.setClientName(CLI_NAME);
+	MTQ.subscribeIncomming("LEDset"); // nodeRed needs this as topic
+	MTQ.subscribeOutgoing("msgOut"); // nodeRed needs this as topic
 }
 
 // For toggle of onboard led on/off
@@ -130,9 +130,9 @@ void loop() {
 	GotMail = MTQ.update();
 	// first check for message
 	if (GotMail == true){
-		Serial.print("message is: ");
-		S_msg = MTQ.GetMsg();
-		Serial.println(S_msg);
+		Serial.print("message is: "); //debug
+		S_msg = MTQ.GetMsg(); //debug
+		Serial.println(S_msg); //debug code
 		LedCheck(S_msg.charAt(0));
 		// will set led color here
 		Debug = parseColor(S_msg);
@@ -143,7 +143,7 @@ void loop() {
 	}
 
 	long now = millis();
-	// publish outgoing once every 2 sec
+	// publish outgoing once every 2 sec mainly for debug of MQTT com
 	if (now - lastMsg > 2000) {
 		lastMsg = now;
 		++value;
