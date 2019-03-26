@@ -15,7 +15,10 @@ Control an RGB led from NodeRed MQTT
 
 #define NUM_LEDS 1 // one LED in kit
 #define LED_PIN 2 // GPIO on ESP8266
-#define CLI_NAME "ESP8266Client" // Need to have diff name for each person
+
+#define CLI_NAME "ESP8266Client01" // Need to have diff name for each person
+#define LED_TOPIC "LEDset01"
+#define OUT_TOPIC "outTopic01"
 
 // for FastLed
 CRGB leds[NUM_LEDS];
@@ -24,7 +27,7 @@ uint8_t gGreen;
 uint8_t gBlue;
 
 // Update these with values suitable for the broker used.
-const char* svrName = "raspberrypi.local";// if zeroconfig works change as needed
+const char* svrName = "pi-iot.local";// if zeroconfig works change as needed
 WiFiClient espClient;
 long lastMsg = 0;
 String S_msg;
@@ -98,7 +101,7 @@ void setup() {
 	Serial.begin(115200); // for debug - demo purposes
 	WiFiManager wifiManager;
 	wifiManager.setAPCallback(configModeCallback);
-	wifiManager.autoConnect("AutoConnectAP");
+	wifiManager.autoConnect(CLI_NAME);
 	Serial.println("Print IP:");
 	Serial.println(WiFi.localIP());
 	// inint FastLed 
@@ -110,8 +113,8 @@ void setup() {
 
 	GotMail = false;
 	MTQ.setClientName(CLI_NAME);
-	MTQ.subscribeIncomming("LEDset"); // nodeRed needs this as topic
-	MTQ.subscribeOutgoing("msgOut"); // nodeRed needs this as topic
+	MTQ.subscribeIncomming(LED_TOPIC); // nodeRed needs this as topic
+	MTQ.subscribeOutgoing(OUT_TOPIC); // nodeRed needs this as topic
 }
 
 // For toggle of onboard led on/off
