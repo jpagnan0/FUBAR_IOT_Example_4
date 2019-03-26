@@ -28,13 +28,15 @@ uint8_t gBlue;
 
 // Update these with values suitable for the broker used.
 const char* svrName = "pi-iot.local";// if zeroconfig works change as needed
+IPAddress IPID(192,169,1,26);
 WiFiClient espClient;
 long lastMsg = 0;
 String S_msg;
 int value = 0;
 uint8_t GotMail;
 uint8_t statusCode;
-MQTThandler MTQ(espClient, svrName);
+//MQTThandler MTQ(espClient, svrName);
+MQTThandler MTQ(espClient, IPID);
 String Debug;
 
 //captive portal config for ESP8266
